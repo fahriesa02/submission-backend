@@ -15,7 +15,7 @@ const saveBooksHandler = (request, h) => {
   const id = nanoid(16);
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
-  const finished = (pageCount === readPage);
+  const finished = pageCount === readPage;
 
   const completeList = {
     id,
@@ -41,26 +41,31 @@ const saveBooksHandler = (request, h) => {
     response.code(400);
     return response;
   }
-  if (readPage > pageCount) {
+
+  if (pageCount < readPage) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal Menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+      // eslint-disable-next-line max-len
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
     });
     response.code(400);
     return response;
   }
+
   const isSuccess = books.filter((book) => book.id === id).length > 0;
+  
   if (isSuccess) {
     const response = h.response({
       status: 'success',
       message: 'Buku berhasil ditambahkan',
       data: {
-        Id: id,
+        bookId: id,
       },
     });
     response.code(201);
     return response;
   }
+
   const response = h.response({
     status: 'error',
     message: 'Buku gagal ditambahkan',
@@ -71,6 +76,7 @@ const saveBooksHandler = (request, h) => {
 // kriteria 2
 const showallBooksHandler = (request, h) => {
   const {name, reading, finished} = request.query;
+  
   if (!name && !reading && !finished) {
     const response = h.response({
       status: 'success',
@@ -187,6 +193,9 @@ const editBooksHandler = (request, h) => {
   }
 
   const index = books.findIndex((note) => note.id === bookId);
+  const finished = pageCount === readPage;
+  const insertedAt = new Date().toISOString();
+  const updatedAt = insertedAt;
   if (index !== -1) {
     books[index] = {
       ...books[index],
@@ -210,7 +219,7 @@ const editBooksHandler = (request, h) => {
   }).code(404);
   return response;
 };
-//kriteria 5
+// kriteria 5
 const deleteBooksHandler = (request, h) => {
   const {bookId} = request.params;
   const index = books.findIndex((note) => note.id === bookId);
