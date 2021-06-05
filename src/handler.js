@@ -89,4 +89,4 @@ const deleteBooksHandler = (request, h) => {
 
 
 module.exports = {saveBooksHandler, showallBooksHandler,
-  showdetailBooksHandler, editBooksHandler, deleteBooksHandler};
+  showdetailBooksHandler, deleteBooksHandler};
