@@ -19,7 +19,7 @@ const routes = [
   },
   {
     method: 'DELETE',
-    path: '/books/{bookId}',
+    path: '/books/{bookIdParam}',
     handler: deleteBooksHandler,
   },
 ];
